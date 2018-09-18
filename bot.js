@@ -25,7 +25,7 @@ setInterval(function(){
 	$.getJSON('https://api.spacexdata.com/v2/launches/next', function(data) {
 		execute(data);
 	}, 6 * 60 * 60 * 1000);
-}
+});
 
 function execute(data){
 	mission = data.mission_name;
