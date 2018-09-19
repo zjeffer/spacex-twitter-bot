@@ -69,9 +69,22 @@ function execute(data){
 				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
 			})
 			clearInterval(intervalID);
+		}else if(diffMinutes === 0 && diffHours === 0 && diffDays === 7){
+			T.post('statuses/update', 
+			{
+				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 1 week. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
+				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
+			})
+			clearInterval(intervalID);
+		}else if(diffMinutes === 0 && diffHours === 0 && diffDays === 1){
+			T.post('statuses/update', 
+			{
+				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 24 hours. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
+				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
+			})
+			clearInterval(intervalID);
 		}
 		console.log("now=" + new Date(now*1000) + ", unixtime=" + new Date(unixtime*1000) 
 			+ ", difference=" + Math.floor(diffDays) + " days, " + Math.floor(diffHours) + ":" + Math.floor(diffMinutes) + ":" +Math.floor(diffSeconds));
 	}, 60 * 1000); //every minute
-
 }
