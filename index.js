@@ -1,17 +1,3 @@
-
-//The following code is only for Heroku:
-// const express = require('express')
-// const path = require('path')
-// const PORT = process.env.PORT || 5000
-
-// express()
-// .use(express.static(path.join(__dirname, 'public')))
-// .set('views', path.join(__dirname, 'views'))
-// .set('view engine', 'ejs')
-// .get('/', (req, res) => res.render('pages/index'))
-// .listen(PORT, () => console.log(`Listening on ${ PORT }`))
-
-
 console.log("The bot is starting");
 
 let Twit = require('twit');
@@ -37,6 +23,8 @@ setInterval(function(){
 }, 6 * 60 * 60 * 1000); //every 6 hours
 
 function execute(data){
+	console.log("getJSON function called");
+
 	let mission = data.mission_name;
 	let UTC = data.launch_date_utc;
 	let local = data.launch_date_local;
@@ -67,24 +55,30 @@ function execute(data){
 			{
 				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 30 minutes. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
 				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
-			})
+			}, tweeted);
 			clearInterval(intervalID);
 		}else if(diffMinutes === 0 && diffHours === 0 && diffDays === 7){
 			T.post('statuses/update', 
 			{
 				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 1 week. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
 				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
-			})
+			}, tweeted);
 			clearInterval(intervalID);
 		}else if(diffMinutes === 0 && diffHours === 0 && diffDays === 1){
 			T.post('statuses/update', 
 			{
 				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 24 hours. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
 				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
-			})
+			}, tweeted);
 			clearInterval(intervalID);
 		}
 		console.log("now=" + new Date(now*1000) + ", unixtime=" + new Date(unixtime*1000) 
-			+ ", difference=" + Math.floor(diffDays) + " days, " + Math.floor(diffHours) + ":" + Math.floor(diffMinutes) + ":" +Math.floor(diffSeconds));
+			+ ", difference=" + Math.floor(diffDays) + " days, " + Math.floor(diffHours) + ":" + Math.floor(diffMinutes) + ":" + Math.floor(diffSeconds));
 	}, 60 * 1000); //every minute
+}
+
+function tweeted(err, data, response){
+	if(err){
+		console.log("Error when tweeting")
+	}
 }
