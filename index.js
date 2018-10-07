@@ -50,21 +50,21 @@ function execute(data){
 		let diffMinutes = (diffHours % 1 ) * 60;
 		let diffSeconds = (diffMinutes % 1) * 60;
 
-		if(diffMinutes === 30 && diffHours === 0 && diffDays === 0){
+		if(Math.floor(diffMinutes) === 30 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 0){
 			T.post('statuses/update', 
 			{
 				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 30 minutes. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
 				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
 			}, tweeted);
 			clearInterval(intervalID);
-		}else if((diffMinutes === 0 || diffMinutes === 1) && diffHours === 0 && diffDays === 7){
+		}else if(Math.floor(diffMinutes) && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 7){
 			T.post('statuses/update', 
 			{
 				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 1 week. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
 				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
 			}, tweeted);
 			clearInterval(intervalID);
-		}else if((diffMinutes === 0 || diffMinutes === 1) && diffHours === 0 && diffDays === 1){
+		}else if(Math.floor(diffMinutes) && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 1){
 			T.post('statuses/update', 
 			{
 				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 24 hours. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
@@ -80,5 +80,7 @@ function execute(data){
 function tweeted(err, data, response){
 	if(err){
 		console.log("Error when tweeting")
+	}else{
+		console.log("Successful tweet");
 	}
 }
