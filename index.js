@@ -16,6 +16,7 @@ $.getJSON('https://api.spacexdata.com/v2/launches/next', function(data) {
 	execute(data);
 });
 
+
 setInterval(function(){
 	$.getJSON('https://api.spacexdata.com/v2/launches/next', function(data) {
 		execute(data);
@@ -50,37 +51,39 @@ function execute(data){
 		let diffMinutes = (diffHours % 1 ) * 60;
 		let diffSeconds = (diffMinutes % 1) * 60;
 
-		if(Math.floor(diffMinutes) === 30 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 0){
+		if(Math.floor(diffMinutes) === 30 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 0 && now < unixtime){
 			T.post('statuses/update', 
 			{
 				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 30 minutes. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
-				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
+				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. Watch on spacex.com/webcast. #SpaceX'
 			}, tweeted);
 			clearInterval(intervalID);
-		}else if(Math.floor(diffMinutes) && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 7){
+		}else if(Math.floor(diffMinutes) === 0 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 7 && now < unixtime){
 			T.post('statuses/update', 
 			{
 				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 1 week. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
 				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
 			}, tweeted);
 			clearInterval(intervalID);
-		}else if(Math.floor(diffMinutes) && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 1){
+		}else if(Math.floor(diffMinutes) === 0 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 1 && now < unixtime){
 			T.post('statuses/update', 
 			{
 				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 24 hours. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
 				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
 			}, tweeted);
+			console.log("now=" + new Date(now*1000) + ", unixtime=" + new Date(unixtime*1000) 
+			+ ", difference=" + Math.floor(diffDays) + " days, " + Math.floor(diffHours) + ":" + Math.floor(diffMinutes) + ":" + Math.floor(diffSeconds));
 			clearInterval(intervalID);
 		}
-		/*console.log("now=" + new Date(now*1000) + ", unixtime=" + new Date(unixtime*1000) 
-			+ ", difference=" + Math.floor(diffDays) + " days, " + Math.floor(diffHours) + ":" + Math.floor(diffMinutes) + ":" + Math.floor(diffSeconds));*/
+		//console.log("now=" + new Date(now*1000) + ", unixtime=" + new Date(unixtime*1000) + ", difference=" + Math.floor(diffDays) + " days, " + Math.floor(diffHours) + ":" + Math.floor(diffMinutes) + ":" + Math.floor(diffSeconds));
 	}, 60 * 1000); //every minute
 }
 
 function tweeted(err, data, response){
 	if(err){
-		console.log("Error when tweeting")
+		console.log("Error when tweeting: " + data + ", response: " + response);
 	}else{
 		console.log("Successful tweet");
 	}
+}
 }
