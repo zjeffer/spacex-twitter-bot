@@ -1,7 +1,7 @@
 # spacex-twitter-bot
 
 
-Needs npm to work, with these packages:
+Install these packages using npm:
 * Twit
 * JQuery
 * JSDOM
