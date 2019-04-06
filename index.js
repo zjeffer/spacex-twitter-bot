@@ -1,8 +1,27 @@
+const express = require('express');
+const path = require('path');
+const PORT = process.env.PORT || 5000;
+
+express()
+.use(express.static(path.join(__dirname, 'public')))
+.set('views', path.join(__dirname, 'views'))
+.set('view engine', 'ejs')
+.get('/', (req, res) => res.render('pages/index'))
+.listen(PORT, () => console.log(`Listening on ${ PORT }`));
+
 console.log("The bot is starting");
 
 let Twit = require('twit');
-let config = require('./config');
-let T = new Twit(config);
+//let config = require('./config');
+//let T = new Twit(config);
+let T = new Twit({
+	consumer_key: process.env.consumer_key,
+  	consumer_secret: process.env.consumer_secret,
+  	access_token: process.env.access_token,
+  	access_token_secret: process.env.access_token_secret,
+  	timeout_ms: 60*1000,  // optional HTTP request timeout to apply to all requests.
+    strictSSL: true     // optional - requires SSL certificates to be valid.
+});
 
 let jsdom = require('jsdom');
 const { JSDOM } = jsdom;
@@ -30,7 +49,7 @@ function execute(data){
 	let UTC = data.launch_date_utc;
 	let local = data.launch_date_local;
 	let rocket = data.rocket.rocket_name;
-	let location = data.launch_site.site_name_long;
+	let location = data.launch_site.site_name;
 
 	let ymd = UTC.substring(0,10);
 	let hour = UTC.substring(11, 13);
@@ -39,6 +58,8 @@ function execute(data){
 	let localymd = local.substring(0,10);
 	let localhour = local.substring(11, 13);
 	let localminute = local.substring(14, 16);
+
+	let localtz = local.substring(16, 19);
 
 	
 	let intervalID = setInterval(function(){
@@ -51,27 +72,32 @@ function execute(data){
 		let diffMinutes = (diffHours % 1 ) * 60;
 		let diffSeconds = (diffMinutes % 1) * 60;
 
+
+		let timeString;
+		if(ymd === localymd){
+			timeString = ymd + ' at ' + hour + ':' + minute + ' UTC, ' + localhour + ':' + localminute + ' local time (UTC ' + localtz + ').'
+		}else{
+			timeString = ymd + ' at ' + hour + ':' + minute + ' UTC, ' + localymd + ' at ' + localhour + ':' + localminute + ' local time (UTC ' + localtz + ').';
+		}
+
 		if(Math.floor(diffMinutes) === 30 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 0 && now < unixtime){
 			T.post('statuses/update', 
 			{
-				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 30 minutes. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
-				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. Watch on spacex.com/webcast. #SpaceX'
+				status: mission + ' using the ' + rocket + ' rocket, launches from ' + location + ' in 30 minutes. Exact time: ' + timeString + ' Watch on spacex.com/webcast. #SpaceX'
 			}, tweeted);
 			clearInterval(intervalID);
 		}else if(Math.floor(diffMinutes) === 0 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 7 && now < unixtime){
 			T.post('statuses/update', 
 			{
-				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 1 week. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
-				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
+				status: mission + ' using the ' + rocket + ' rocket, launches from ' + location + ' in 1 week. Exact time: ' + timeString + '. #SpaceX'
 			}, tweeted);
 			clearInterval(intervalID);
 		}else if(Math.floor(diffMinutes) === 0 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 1 && now < unixtime){
 			T.post('statuses/update', 
 			{
-				status: 'Next mission: ' + mission + ' using the ' + rocket + ' rocket, launches in 24 hours. Exact time: ' + ymd + ' at ' + hour + ':' + minute + ' UTC, '
-				+ localymd + ' at ' + localhour + ':' + localminute + ' local time. #SpaceX'
+				status: mission + ' using the ' + rocket + ' rocket, launches from ' + location + ' in 24 hours. Exact time: ' + timeString + '. #SpaceX'
 			}, tweeted);
-			console.log("now=" + new Date(now*1000) + ", unixtime=" + new Date(unixtime*1000) 
+			console.log("now=" + new Date(now*1000) + ", unixtime=" + new Date(unixtime*1000)
 			+ ", difference=" + Math.floor(diffDays) + " days, " + Math.floor(diffHours) + ":" + Math.floor(diffMinutes) + ":" + Math.floor(diffSeconds));
 			clearInterval(intervalID);
 		}
@@ -79,11 +105,10 @@ function execute(data){
 	}, 60 * 1000); //every minute
 }
 
-function tweeted(err, data, response){
-	if(err){
+function tweeted(err, data, response) {
+	if (err) {
 		console.log("Error when tweeting: " + data + ", response: " + response);
-	}else{
+	} else {
 		console.log("Successful tweet");
 	}
-}
 }
