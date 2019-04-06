@@ -5,6 +5,7 @@ Install these packages using npm:
 * Twit
 * JQuery
 * JSDOM
+* express
 
 I use Heroku to run it permanently but you can run it locally as well (e.g. on a Raspberry Pi).
 
