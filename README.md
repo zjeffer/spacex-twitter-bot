@@ -7,6 +7,4 @@ Install these packages using npm:
 * JSDOM
 * express
 
-I use Heroku to run it permanently but you can run it locally as well (e.g. on a Raspberry Pi).
-
-Change the contents of config.js to match your twitter keys and secrets.
+I run this on a Raspberry Pi 3 Model B+
