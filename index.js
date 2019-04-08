@@ -59,7 +59,7 @@ function execute(data){
 	let localhour = local.substring(11, 13);
 	let localminute = local.substring(14, 16);
 
-	let localtz = local.substring(16, 19);
+	let localtz = local.substring(19, 22);
 
 	
 	let intervalID = setInterval(function(){
@@ -75,9 +75,9 @@ function execute(data){
 
 		let timeString;
 		if(ymd === localymd){
-			timeString = ymd + ' at ' + hour + ':' + minute + ' UTC, ' + localhour + ':' + localminute + ' local time (UTC ' + localtz + ').'
+			timeString = ymd + ' at ' + hour + ':' + minute + ' UTC, ' + localhour + ':' + localminute + ' local time (UTC' + localtz + ').'
 		}else{
-			timeString = ymd + ' at ' + hour + ':' + minute + ' UTC, ' + localymd + ' at ' + localhour + ':' + localminute + ' local time (UTC ' + localtz + ').';
+			timeString = ymd + ' at ' + hour + ':' + minute + ' UTC, ' + localymd + ' at ' + localhour + ':' + localminute + ' local time (UTC' + localtz + ').';
 		}
 
 		if(Math.floor(diffMinutes) === 30 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 0 && now < unixtime){
