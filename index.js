@@ -89,13 +89,13 @@ function execute(data){
 		}else if(Math.floor(diffMinutes) === 0 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 7 && now < unixtime){
 			T.post('statuses/update', 
 			{
-				status: mission + ' using the ' + rocket + ' rocket, launches from ' + location + ' in 1 week. Exact time: ' + timeString + '. #SpaceX'
+				status: mission + ' using the ' + rocket + ' rocket, launches from ' + location + ' in 1 week. Exact time: ' + timeString + ' #SpaceX'
 			}, tweeted);
 			clearInterval(intervalID);
 		}else if(Math.floor(diffMinutes) === 0 && Math.floor(diffHours) === 0 && Math.floor(diffDays) === 1 && now < unixtime){
 			T.post('statuses/update', 
 			{
-				status: mission + ' using the ' + rocket + ' rocket, launches from ' + location + ' in 24 hours. Exact time: ' + timeString + '. #SpaceX'
+				status: mission + ' using the ' + rocket + ' rocket, launches from ' + location + ' in 24 hours. Exact time: ' + timeString + ' #SpaceX'
 			}, tweeted);
 			console.log("now=" + new Date(now*1000) + ", unixtime=" + new Date(unixtime*1000)
 			+ ", difference=" + Math.floor(diffDays) + " days, " + Math.floor(diffHours) + ":" + Math.floor(diffMinutes) + ":" + Math.floor(diffSeconds));
