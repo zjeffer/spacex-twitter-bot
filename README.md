@@ -6,5 +6,6 @@ Install these packages using npm:
 * JQuery
 * JSDOM
 * express
+* dotenv
 
 I run this on a Raspberry Pi 3 Model B+
