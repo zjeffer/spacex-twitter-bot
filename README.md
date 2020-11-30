@@ -11,4 +11,4 @@ Install these packages using npm:
 * express
 * dotenv
 
-I run this on a Raspberry Pi 3 Model B+
+I run this on a Raspberry Pi 4
